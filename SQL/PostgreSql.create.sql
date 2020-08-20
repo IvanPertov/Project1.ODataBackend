@@ -7,6 +7,12 @@ CREATE TABLE ЗУДоговора (
 
  primaryKey UUID NOT NULL,
 
+ primarykey UUID NULL,
+
+ ЗУ_m0 UUID NOT NULL,
+
+ Договор_m0 UUID NOT NULL,
+
  PRIMARY KEY (primaryKey));
 
 
@@ -14,6 +20,14 @@ CREATE TABLE ЗУДоговора (
 CREATE TABLE Оплаты (
 
  primaryKey UUID NOT NULL,
+
+ primarykey UUID NULL,
+
+ Дата TIMESTAMP(3) NULL,
+
+ Сумма DECIMAL NULL,
+
+ Договор_m0 UUID NOT NULL,
 
  PRIMARY KEY (primaryKey));
 
@@ -23,6 +37,16 @@ CREATE TABLE Договор (
 
  primaryKey UUID NOT NULL,
 
+ primarykey UUID NULL,
+
+ Идентификатор INT NULL,
+
+ ДатаНачала TIMESTAMP(3) NULL,
+
+ ДатаОкончания TIMESTAMP(3) NULL,
+
+ Состояние STRING NULL,
+
  PRIMARY KEY (primaryKey));
 
 
@@ -30,6 +54,32 @@ CREATE TABLE Договор (
 CREATE TABLE Начисления (
 
  primaryKey UUID NOT NULL,
+
+ primarykey UUID NULL,
+
+ Период VARCHAR(255) NULL,
+
+ Сумма DECIMAL NULL,
+
+ Договор_m0 UUID NOT NULL,
+
+ PRIMARY KEY (primaryKey));
+
+
+
+CREATE TABLE Контрагент (
+
+ primaryKey UUID NOT NULL,
+
+ primarykey UUID NULL,
+
+ Тип VARCHAR(255) NULL,
+
+ Наименование VARCHAR(255) NULL,
+
+ ИНН VARCHAR(255) NULL,
+
+ ОГРН VARCHAR(255) NULL,
 
  PRIMARY KEY (primaryKey));
 
@@ -40,6 +90,26 @@ CREATE TABLE ЗемельныйУчасток (
  primaryKey UUID NOT NULL,
 
  primarykey UUID NULL,
+
+ КадНомер VARCHAR(255) NULL,
+
+ Адрес VARCHAR(255) NULL,
+
+ РазрИсп VARCHAR(255) NULL,
+
+ PRIMARY KEY (primaryKey));
+
+
+
+CREATE TABLE КонтрДоговора (
+
+ primaryKey UUID NOT NULL,
+
+ primarykey UUID NULL,
+
+ Контрагент_m0 UUID NOT NULL,
+
+ Договор_m0 UUID NOT NULL,
 
  PRIMARY KEY (primaryKey));
 
@@ -234,9 +304,27 @@ CREATE TABLE ApplicationLog (
 
 
 
- ALTER TABLE STORMWEBSEARCH ADD CONSTRAINT FK5fd3e8f8eea9445aa3158e22d30108f4 FOREIGN KEY (FilterSetting_m0) REFERENCES STORMFILTERSETTING; 
+ ALTER TABLE ЗУДоговора ADD CONSTRAINT FKcbc3422a6edb49409fe63f70a9c92f00 FOREIGN KEY (ЗУ_m0) REFERENCES ЗемельныйУчасток; 
+CREATE INDEX Index18a37dbfeb3f9d18eadf5e432274087f0564faa9 on ЗУДоговора (ЗУ_m0); 
 
- ALTER TABLE STORMFILTERDETAIL ADD CONSTRAINT FK5745d8f6189043b8a383fbe79251f777 FOREIGN KEY (FilterSetting_m0) REFERENCES STORMFILTERSETTING; 
+ ALTER TABLE ЗУДоговора ADD CONSTRAINT FKcffe6c83b35b4542a3e2a49ad275fd5b FOREIGN KEY (Договор_m0) REFERENCES Договор; 
+CREATE INDEX Index434365021ec3ac96fc6869fb3a34bc697140f6c3 on ЗУДоговора (Договор_m0); 
 
- ALTER TABLE STORMFILTERLOOKUP ADD CONSTRAINT FK7c09baa51ea746448bd5ce11c64bc4f6 FOREIGN KEY (FilterSetting_m0) REFERENCES STORMFILTERSETTING; 
+ ALTER TABLE Оплаты ADD CONSTRAINT FKcc488e1b4be3424d85294ac0205d9724 FOREIGN KEY (Договор_m0) REFERENCES Договор; 
+CREATE INDEX Index2073fb1d9cfb810c58ce39c2215b38c693297a35 on Оплаты (Договор_m0); 
+
+ ALTER TABLE Начисления ADD CONSTRAINT FKf2820db3b1b94f399dce98924df12b11 FOREIGN KEY (Договор_m0) REFERENCES Договор; 
+CREATE INDEX Index3edc1733b19924fe82aa39a6437ce4091d20038e on Начисления (Договор_m0); 
+
+ ALTER TABLE КонтрДоговора ADD CONSTRAINT FK9b1fed2ce72042a1873de674939a4d47 FOREIGN KEY (Контрагент_m0) REFERENCES Контрагент; 
+CREATE INDEX Indexf78b57969567ca8c06a4fed53fff0c10bcebd8ca on КонтрДоговора (Контрагент_m0); 
+
+ ALTER TABLE КонтрДоговора ADD CONSTRAINT FK34e5a6b35a3e43f496c3b5fba80e57e6 FOREIGN KEY (Договор_m0) REFERENCES Договор; 
+CREATE INDEX Indexe077502febf3fe8ee438387626bd2cb243caee79 on КонтрДоговора (Договор_m0); 
+
+ ALTER TABLE STORMWEBSEARCH ADD CONSTRAINT FKa7c174d0d21242c581c876a8575bf7e7 FOREIGN KEY (FilterSetting_m0) REFERENCES STORMFILTERSETTING; 
+
+ ALTER TABLE STORMFILTERDETAIL ADD CONSTRAINT FK7000ecd2fcc4417b9e861171023ecd19 FOREIGN KEY (FilterSetting_m0) REFERENCES STORMFILTERSETTING; 
+
+ ALTER TABLE STORMFILTERLOOKUP ADD CONSTRAINT FKa935cc8f30574aa48708000609379649 FOREIGN KEY (FilterSetting_m0) REFERENCES STORMFILTERSETTING; 
 

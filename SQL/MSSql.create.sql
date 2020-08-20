@@ -6,12 +6,26 @@ CREATE TABLE [ЗУДоговора] (
 
 	 [primaryKey] UNIQUEIDENTIFIER  NOT NULL,
 
+	 [primarykey] uniqueidentifier  NULL,
+
+	 [ЗУ_m0] UNIQUEIDENTIFIER  NOT NULL,
+
+	 [Договор_m0] UNIQUEIDENTIFIER  NOT NULL,
+
 	 PRIMARY KEY ([primaryKey]))
 
 
 CREATE TABLE [Оплаты] (
 
 	 [primaryKey] UNIQUEIDENTIFIER  NOT NULL,
+
+	 [primarykey] uniqueidentifier  NULL,
+
+	 [Дата] DATETIME  NULL,
+
+	 [Сумма] DECIMAL  NULL,
+
+	 [Договор_m0] UNIQUEIDENTIFIER  NOT NULL,
 
 	 PRIMARY KEY ([primaryKey]))
 
@@ -20,12 +34,47 @@ CREATE TABLE [Договор] (
 
 	 [primaryKey] UNIQUEIDENTIFIER  NOT NULL,
 
+	 [primarykey] uniqueidentifier  NULL,
+
+	 [Идентификатор] INT  NULL,
+
+	 [ДатаНачала] DATETIME  NULL,
+
+	 [ДатаОкончания] DATETIME  NULL,
+
+	 [Состояние] String  NULL,
+
 	 PRIMARY KEY ([primaryKey]))
 
 
 CREATE TABLE [Начисления] (
 
 	 [primaryKey] UNIQUEIDENTIFIER  NOT NULL,
+
+	 [primarykey] uniqueidentifier  NULL,
+
+	 [Период] VARCHAR(255)  NULL,
+
+	 [Сумма] DECIMAL  NULL,
+
+	 [Договор_m0] UNIQUEIDENTIFIER  NOT NULL,
+
+	 PRIMARY KEY ([primaryKey]))
+
+
+CREATE TABLE [Контрагент] (
+
+	 [primaryKey] UNIQUEIDENTIFIER  NOT NULL,
+
+	 [primarykey] uniqueidentifier  NULL,
+
+	 [Тип] VARCHAR(255)  NULL,
+
+	 [Наименование] VARCHAR(255)  NULL,
+
+	 [ИНН] VARCHAR(255)  NULL,
+
+	 [ОГРН] VARCHAR(255)  NULL,
 
 	 PRIMARY KEY ([primaryKey]))
 
@@ -34,7 +83,26 @@ CREATE TABLE [ЗемельныйУчасток] (
 
 	 [primaryKey] UNIQUEIDENTIFIER  NOT NULL,
 
-	 [primarykey] uuid  NULL,
+	 [primarykey] uniqueidentifier  NULL,
+
+	 [КадНомер] VARCHAR(255)  NULL,
+
+	 [Адрес] VARCHAR(255)  NULL,
+
+	 [РазрИсп] VARCHAR(255)  NULL,
+
+	 PRIMARY KEY ([primaryKey]))
+
+
+CREATE TABLE [КонтрДоговора] (
+
+	 [primaryKey] UNIQUEIDENTIFIER  NOT NULL,
+
+	 [primarykey] uniqueidentifier  NULL,
+
+	 [Контрагент_m0] UNIQUEIDENTIFIER  NOT NULL,
+
+	 [Договор_m0] UNIQUEIDENTIFIER  NOT NULL,
 
 	 PRIMARY KEY ([primaryKey]))
 
@@ -219,6 +287,24 @@ CREATE TABLE [ApplicationLog] (
 
 
 
+
+ ALTER TABLE [ЗУДоговора] ADD CONSTRAINT [ЗУДоговора_FЗемельныйУчасток_0] FOREIGN KEY ([ЗУ_m0]) REFERENCES [ЗемельныйУчасток]
+CREATE INDEX ЗУДоговора_IЗУ_m0 on [ЗУДоговора] ([ЗУ_m0])
+
+ ALTER TABLE [ЗУДоговора] ADD CONSTRAINT [ЗУДоговора_FДоговор_0] FOREIGN KEY ([Договор_m0]) REFERENCES [Договор]
+CREATE INDEX ЗУДоговора_IДоговор_m0 on [ЗУДоговора] ([Договор_m0])
+
+ ALTER TABLE [Оплаты] ADD CONSTRAINT [Оплаты_FДоговор_0] FOREIGN KEY ([Договор_m0]) REFERENCES [Договор]
+CREATE INDEX Оплаты_IДоговор_m0 on [Оплаты] ([Договор_m0])
+
+ ALTER TABLE [Начисления] ADD CONSTRAINT [Начисления_FДоговор_0] FOREIGN KEY ([Договор_m0]) REFERENCES [Договор]
+CREATE INDEX Начисления_IДоговор_m0 on [Начисления] ([Договор_m0])
+
+ ALTER TABLE [КонтрДоговора] ADD CONSTRAINT [КонтрДоговора_FКонтрагент_0] FOREIGN KEY ([Контрагент_m0]) REFERENCES [Контрагент]
+CREATE INDEX КонтрДоговора_IКонтрагент_m0 on [КонтрДоговора] ([Контрагент_m0])
+
+ ALTER TABLE [КонтрДоговора] ADD CONSTRAINT [КонтрДоговора_FДоговор_0] FOREIGN KEY ([Договор_m0]) REFERENCES [Договор]
+CREATE INDEX КонтрДоговора_IДоговор_m0 on [КонтрДоговора] ([Договор_m0])
 
  ALTER TABLE [STORMWEBSEARCH] ADD CONSTRAINT [STORMWEBSEARCH_FSTORMFILTERSETTING_0] FOREIGN KEY ([FilterSetting_m0]) REFERENCES [STORMFILTERSETTING]
 
